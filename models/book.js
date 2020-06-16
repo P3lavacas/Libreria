@@ -25,7 +25,7 @@ const bookSchema = new mongoose.Schema({
     default: Date.now
   },
   coverImageName: {
-    type: Bufeer,
+    type: Buffer,
     required: true
   },
   coverImageType: {
