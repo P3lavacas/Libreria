@@ -1,18 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
 const Book = require('../models/book');
-const uploadPath = path.join('public', Book.coverImageBasePath);
 const Author = require('../models/author');
 const imageMimeTypes = ['image/jpeg', 'image/png', 'images/gif']
-const upload multer({
-  dest: uploadPath,
-  filefilter: (req, file, callback) =>{
-    callback(null, )
-  }
-});
 
 // todos los libros
 router.get('/', async (req, res) => {
@@ -43,7 +33,7 @@ router.get('/new', async (req, res) => {
 });
 
 // crear ruta d elibro
-router.post('/', uplad.single('cover'), async (req, res) => {
+router.post('/', async (req, res) => {
   const fileName = re.file != null ? req.file.filename : null
   const book = new Book({
     title: req.body.title,
@@ -53,15 +43,12 @@ router.post('/', uplad.single('cover'), async (req, res) => {
     coverImageName: fileName,
     description: req.body.description
   })
-  //saveCover(book, req.body.cover)
+  saveCover(book, req.body.cover);
   try {
     const newBook = await book.save()
     //res.redirect(`books/${newBook.id}`)
     res.redirect('authors');
   } catch {
-    if (book.coverImageName != null){
-    removeBookCover(book.coverImageName);
-  }
     renderNewPage(res, book, true);
   }
 })
@@ -131,12 +118,6 @@ router.delete('/:id', async (req, res) => {
     }
   }
 })
-
-function removeBookCover(fileName){
-  fs.unlink(path.join(uploadPath, fileName), err => {
-    if (err) console.error(err);
-  });
-}
 
 async function renderNewPage(res, book, hasError = false) {
   renderFormPage(res, book, 'new', hasError)
